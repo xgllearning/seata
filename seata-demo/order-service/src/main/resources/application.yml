@@ -23,3 +23,20 @@ logging:
     cn.itcast: debug
   pattern:
     dateformat: MM-dd HH:mm:ss:SSS
+seata:
+  registry: # TC服务注册中心的配置，微服务根据这些信息去注册中心获取tc服务地址
+    type: nacos # 注册中心类型 nacos
+    nacos:
+      server-addr: 192.168.177.128:8848 # nacos地址
+      namespace: "" # namespace，默认为空
+      group: DEFAULT_GROUP # 分组，默认是DEFAULT_GROUP
+      application: seata-tc-server # seata服务名称
+      username: nacos
+      password: nacos
+      #此处不能配置cluster，配置也不会生效，此处用到了seata tcc服务的高可用问题
+      #做法是配置了一个事务组，即把这个事务做了分组，例如订单服务，库存管理等都是一个个事务，如果我们希望它们被tc集群管理，那么它们就是一个事务组，目的是做快速失败和集群容错用的
+  tx-service-group: seata-demo # 事务组名称
+  service:
+    vgroup-mapping: # 事务组与cluster的映射关系
+      seata-demo: SH
+  data-source-proxy-mode: XA # 开启数据源代理的XA模式
