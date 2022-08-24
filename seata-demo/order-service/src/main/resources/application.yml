@@ -36,7 +36,16 @@ seata:
       #此处不能配置cluster，配置也不会生效，此处用到了seata tcc服务的高可用问题
       #做法是配置了一个事务组，即把这个事务做了分组，例如订单服务，库存管理等都是一个个事务，如果我们希望它们被tc集群管理，那么它们就是一个事务组，目的是做快速失败和集群容错用的
   tx-service-group: seata-demo # 事务组名称
-  service:
-    vgroup-mapping: # 事务组与cluster的映射关系
-      seata-demo: SH
-  data-source-proxy-mode: AT # 开启数据源代理的XA模式
+  #  service:
+  #    vgroup-mapping: # 事务组与cluster的映射关系
+  #      seata-demo: SH
+  #  data-source-proxy-mode: AT # 开启数据源代理的XA模式
+  #将配置放在nacos上，异地高可用容灾架构
+  config:
+    type: nacos
+    nacos:
+      server-addr: 192.168.177.128:8848
+      username: nacos
+      password: nacos
+      group: SEATA_GROUP
+      data-id: client.properties
